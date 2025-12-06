@@ -1,0 +1,217 @@
+CS406tolgatoker@nebula:~/contree$ chmod +x run_gprof_analysis.sh && ./run_gprof_analysis.sh
+Building project with profiling enabled...
+-- Compiling in profile mode
+-- IPO / LTO disabled for profiling
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/users/CS406tolgatoker/contree/code/Build
+[100%] Built target ConTree
+Processing dataset: avila
+  Running analysis for max-depth 3...
+Misclassification score: 8664
+Accuracy: 0.584799
+Average time taken to get the decision tree: 599.6750 seconds
+Optimal tree: [0,0.21641450,[0,0.18056348,[3,0.68755186,0,7],[8,0.13838020,3,7]],[4,0.88798213,[1,0.00804203,0,1],[2,0.06779179,4,5]]]
+  Analysis for depth 3 saved to benchmarks/analysis_avila_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 8059
+Accuracy: 0.613792
+Average time taken to get the decision tree: 600.0480 seconds
+Optimal tree: [0,0.23494419,[0,0.21641450,[0,0.18056348,[3,0.68755186,0,7],[8,0.13838020,3,7]],[3,0.56607676,[2,0.06361534,0,1],[4,0.88798213,0,5]]],[2,0.06508546,[1,0.00682951,[4,0.91036570,0,4],[3,0.52820957,1,0]],[1,0.00631418,[3,0.53383267,1,0],[5,0.11857101,2,0]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_avila_depth_4.txt
+Processing dataset: bank
+  Running analysis for max-depth 3...
+Misclassification score: 23
+Accuracy: 0.983236
+Average time taken to get the decision tree: 0.8870 seconds
+Optimal tree: [2,0.23659694,[1,0.70866966,[0,0.68247366,1,0],[0,0.26284590,1,0]],[1,0.54222888,[0,0.47447777,1,0],[0,0.30326140,1,0]]]
+  Analysis for depth 3 saved to benchmarks/analysis_bank_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 0
+Accuracy: 1
+Average time taken to get the decision tree: 0.4020 seconds
+Optimal tree: [0,0.52437770,[2,0.43329573,[0,0.30698895,[2,0.35915542,1,0],[1,0.66570491,1,0]],[3,0.68274260,[0,0.41756007,1,0],[1,0.39951569,1,0]]],[1,0.58999419,[3,0.84232080,[2,0.23619100,1,0],[0,0.62420982,1,0]],[1,0.69798696,[2,0.12123588,1,0],[2,0.01282927,1,0]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_bank_depth_4.txt
+Processing dataset: bean
+  Running analysis for max-depth 3...
+Misclassification score: 1910
+Accuracy: 0.859672
+Average time taken to get the decision tree: 601.4100 seconds
+Optimal tree: [1,0.24906398,[3,0.17523950,[13,0.28674620,4,6],[11,0.59595186,5,0]],[11,0.38126183,[12,0.43132621,3,4],[0,0.36596388,1,2]]]
+  Analysis for depth 3 saved to benchmarks/analysis_bean_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 5584
+Accuracy: 0.589744
+Average time taken to get the decision tree: 604.3520 seconds
+Optimal tree: [0,0.10705738,[0,0.08315696,[11,0.63566864,[13,0.31225532,4,6],[12,0.55304825,0,6]],[12,0.50553238,[13,0.47434324,5,0],[11,0.28147393,4,5]]],4]
+  Analysis for depth 4 saved to benchmarks/analysis_bean_depth_4.txt
+Processing dataset: bidding
+  Running analysis for max-depth 3...
+Misclassification score: 50
+Accuracy: 0.99209
+Average time taken to get the decision tree: 80.6060 seconds
+Optimal tree: [8,0.55554444,[8,0.11118889,[2,0.25005001,0,1],[2,0.74994999,0,1]],[1,0.08650230,0,[2,0.25005001,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_bidding_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 22
+Accuracy: 0.99652
+Average time taken to get the decision tree: 372.8910 seconds
+Optimal tree: [8,0.55554444,[8,0.33336666,[8,0.11118889,[2,0.25005001,0,1],[2,0.74994999,0,1]],[3,0.78605920,[2,0.74994999,0,1],[2,0.25005001,0,1]]],[1,0.09737979,[1,0.08813408,0,[2,0.25005001,0,1]],[8,0.83326662,[2,0.25005001,0,1],[0,0.93412364,0,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_bidding_depth_4.txt
+Processing dataset: eeg
+  Running analysis for max-depth 3...
+Misclassification score: 4350
+Accuracy: 0.709613
+Average time taken to get the decision tree: 601.3730 seconds
+Optimal tree: [1,0.23765413,[5,0.34692776,[11,0.42278886,0,1],[13,0.53193331,0,1]],[6,0.47270551,[6,0.46080154,1,0],[5,0.36464834,1,0]]]
+  Analysis for depth 3 saved to benchmarks/analysis_eeg_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 4540
+Accuracy: 0.696929
+Average time taken to get the decision tree: 601.1390 seconds
+Optimal tree: [0,0.51964688,[1,0.23538673,[5,0.34683198,[11,0.42235687,0,1],[6,0.46981919,0,1]],[6,0.46260458,[13,0.52245247,0,1],[6,0.47222483,0,1]]],1]
+  Analysis for depth 4 saved to benchmarks/analysis_eeg_depth_4.txt
+Processing dataset: fault
+  Running analysis for max-depth 3...
+Misclassification score: 627
+Accuracy: 0.676971
+Average time taken to get the decision tree: 510.3020 seconds
+Optimal tree: [11,0.50000000,[4,0.01159109,[4,0.00027356,3,6],[24,0.65798521,2,6]],[10,0.23638430,[13,0.13468847,1,6],[16,0.46773863,6,5]]]
+  Analysis for depth 3 saved to benchmarks/analysis_fault_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 560
+Accuracy: 0.711489
+Average time taken to get the decision tree: 600.1950 seconds
+Optimal tree: [0,0.44136071,[11,0.50000000,[23,0.35183889,[4,0.00023426,3,6],[24,0.74958444,2,6]],[10,0.23638430,[13,0.13468847,1,6],[16,0.46773863,6,5]]],[16,0.48049194,[8,0.49507487,[19,0.98671436,6,0],[14,0.06816316,4,6]],[11,0.50000000,[4,0.00027684,3,6],[13,0.26927692,5,6]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_fault_depth_4.txt
+Processing dataset: htru
+  Running analysis for max-depth 3...
+Misclassification score: 345
+Accuracy: 0.980724
+Average time taken to get the decision tree: 599.9610 seconds
+Optimal tree: [0,0.44095951,[0,0.33918571,[2,0.34472167,0,1],[2,0.31591877,0,1]],[4,0.01704538,[2,0.29991329,0,1],[2,0.27401447,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_htru_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 1626
+Accuracy: 0.909152
+Average time taken to get the decision tree: 600.7290 seconds
+Optimal tree: [0,0.56472713,0,[2,0.22915173,[5,0.37993276,[5,0.37961265,0,1],[2,0.22849353,0,1]],[4,0.12085457,[5,0.41336566,0,1],[2,0.25579298,0,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_htru_depth_4.txt
+Processing dataset: magic
+  Running analysis for max-depth 3...
+Misclassification score: 3291
+Accuracy: 0.826972
+Average time taken to get the decision tree: 602.4630 seconds
+Optimal tree: [1,0.04691042,[8,0.26977384,[2,0.23003626,0,1],[2,0.12857814,0,1]],[8,0.24949846,[0,0.34942243,0,1],[0,0.09881439,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_magic_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 5838
+Accuracy: 0.69306
+Average time taken to get the decision tree: 603.1300 seconds
+Optimal tree: [0,0.10056339,[1,0.04733178,[8,0.29179722,[2,0.18980184,0,1],[2,0.12857814,0,1]],[9,0.33173519,[0,0.03919556,1,0],[8,0.44650349,0,1]]],0]
+  Analysis for depth 4 saved to benchmarks/analysis_magic_depth_4.txt
+Processing dataset: occupancy
+  Running analysis for max-depth 3...
+Misclassification score: 185
+Accuracy: 0.991002
+Average time taken to get the decision tree: 367.8180 seconds
+Optimal tree: [3,0.22327098,[2,0.24444646,[2,0.22875756,1,0],[3,0.03477375,1,0]],[1,0.37324005,[2,0.24994445,1,0],[2,0.16955596,1,0]]]
+  Analysis for depth 3 saved to benchmarks/analysis_occupancy_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 150
+Accuracy: 0.992704
+Average time taken to get the decision tree: 599.3530 seconds
+Optimal tree: [0,0.62447429,[4,0.42005271,[2,0.24387702,[2,0.20966186,1,0],[3,0.03477375,1,0]],[1,0.41833097,[3,0.30830282,1,0],[2,0.23197290,1,0]]],[3,0.21989074,[2,0.39087468,[2,0.23063275,1,0],[1,0.39387238,0,1]],[1,0.37297642,[2,0.24994445,1,0],[2,0.20008945,1,0]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_occupancy_depth_4.txt
+Processing dataset: page
+  Running analysis for max-depth 3...
+Misclassification score: 168
+Accuracy: 0.969304
+Average time taken to get the decision tree: 63.5000 seconds
+Optimal tree: [3,0.01212662,[4,0.14564051,[0,0.01379589,0,3],[3,0.00052636,2,0]],[0,0.00321270,[6,0.00015853,0,1],[6,0.00389819,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_page_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 122
+Accuracy: 0.977709
+Average time taken to get the decision tree: 599.5100 seconds
+Optimal tree: [0,0.02811432,[3,0.01228301,[4,0.11189198,[3,0.00478348,3,0],[3,0.00052636,2,0]],[0,0.00072254,[6,0.00015550,0,1],[6,0.00117064,0,1]]],[3,0.00260139,[1,0.05353134,[3,0.00057756,2,3],[4,0.26745158,3,4]],[0,0.10157410,[4,0.15935084,3,0],[4,0.28116190,3,4]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_page_depth_4.txt
+Processing dataset: raisin
+  Running analysis for max-depth 3...
+Misclassification score: 94
+Accuracy: 0.895556
+Average time taken to get the decision tree: 19.0840 seconds
+Optimal tree: [1,0.25339693,[6,0.24471366,[3,0.85143644,0,1],[5,0.76668704,1,0]],[2,0.31128761,[5,0.78695428,1,0],[6,0.27186441,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_raisin_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 76
+Accuracy: 0.915556
+Average time taken to get the decision tree: 599.4870 seconds
+Optimal tree: [0,0.29546684,[5,0.71309161,[3,0.75138879,[4,0.24284931,0,1],[1,0.21827772,0,1]],[0,0.17794052,[6,0.18594986,0,1],[1,0.26308227,0,1]]],[3,0.70557845,[0,0.32490861,[6,0.25193650,0,1],[6,0.29521954,0,1]],[3,0.73729360,[4,0.29240340,0,1],[6,0.27660567,0,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_raisin_depth_4.txt
+Processing dataset: rice
+  Running analysis for max-depth 3...
+Misclassification score: 243
+Accuracy: 0.93622
+Average time taken to get the decision tree: 365.7570 seconds
+Optimal tree: [0,0.41398481,[5,0.41202533,[2,0.49756566,1,0],[3,0.50304180,0,1]],[2,0.48441994,[4,0.71377218,1,0],[1,0.50470477,1,0]]]
+  Analysis for depth 3 saved to benchmarks/analysis_rice_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 224
+Accuracy: 0.941207
+Average time taken to get the decision tree: 599.9410 seconds
+Optimal tree: [0,0.43822747,[0,0.41433680,[5,0.41540897,[2,0.49756566,1,0],[3,0.50908566,0,1]],[4,0.72071326,[4,0.71440363,1,0],[1,0.50485265,1,0]]],[1,0.55571759,[5,0.48563051,[2,0.50869572,1,0],[3,0.60434359,0,1]],[5,0.51797283,[3,0.57987088,0,1],[2,0.47889078,1,0]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_rice_depth_4.txt
+Processing dataset: room
+  Running analysis for max-depth 3...
+Misclassification score: 80
+Accuracy: 0.992102
+Average time taken to get the decision tree: 32.1120 seconds
+Optimal tree: [4,0.55756426,[1,0.31650728,[13,0.44525266,3,2],[3,0.59874570,2,3]],[5,0.43218410,[6,0.44465393,0,1],[6,0.63033104,1,2]]]
+  Analysis for depth 3 saved to benchmarks/analysis_room_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 14
+Accuracy: 0.998618
+Average time taken to get the decision tree: 599.2500 seconds
+Optimal tree: [5,0.43218410,[3,0.63577533,[2,0.48000401,[4,0.33639634,3,0],[4,0.00615939,3,2]],[4,0.59392059,[1,0.61762357,3,2],[6,0.44465393,0,1]]],[4,0.99687028,[2,0.80279660,[6,0.64104319,1,2],[0,0.75689304,1,2]],[9,0.19858971,[11,0.04635940,2,1],[9,0.46765351,2,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_room_depth_4.txt
+Processing dataset: segment
+  Running analysis for max-depth 3...
+Misclassification score: 278
+Accuracy: 0.879654
+Average time taken to get the decision tree: 85.7290 seconds
+Optimal tree: [11,0.15556383,[17,0.20136707,[17,0.14785661,1,6],[1,0.56873620,4,3]],[1,0.59789705,[8,0.53175199,5,2],[13,0.21417484,3,0]]]
+  Analysis for depth 3 saved to benchmarks/analysis_segment_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 211
+Accuracy: 0.908658
+Average time taken to get the decision tree: 599.5320 seconds
+Optimal tree: [0,0.59089088,[1,0.56040454,[16,0.34994030,[8,0.53175199,5,2],[17,0.17198902,1,4]],[14,0.49430856,[1,0.63122380,5,0],[11,0.04062190,6,3]]],[1,0.56248748,[9,0.17996678,[12,0.85440671,6,4],[8,0.54453021,5,2]],[10,0.18231687,[11,0.05153165,6,3],[9,0.19211993,5,0]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_segment_depth_4.txt
+Processing dataset: skin
+  Running analysis for max-depth 3...
+Misclassification score: 7761
+Accuracy: 0.96833
+Average time taken to get the decision tree: 128.4220 seconds
+Optimal tree: [0,0.49607921,[2,0.56273258,[2,0.46863371,1,0],[1,0.35493100,1,0]],[0,0.82150429,[2,0.82934588,1,0],1]]
+  Analysis for depth 3 saved to benchmarks/analysis_skin_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 2977
+Accuracy: 0.987852
+Average time taken to get the decision tree: 599.5720 seconds
+Optimal tree: [0,0.37453490,[2,0.57449490,[1,0.23338667,1,[2,0.46471295,1,0]],[1,0.35101020,1,[2,0.88815767,0,1]]],[2,0.84502900,[0,0.56273258,[2,0.61762351,1,0],1],[1,0.55097020,[0,0.38629726,0,1],[1,0.85679138,0,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_skin_depth_4.txt
+Processing dataset: wilt
+  Running analysis for max-depth 3...
+Misclassification score: 88
+Accuracy: 0.981814
+Average time taken to get the decision tree: 25.1650 seconds
+Optimal tree: [2,0.03567202,[1,0.04205611,[2,0.02626651,1,0],[1,0.04211055,0,1]],[2,0.04369602,[1,0.05452356,0,1],[1,0.06345776,0,1]]]
+  Analysis for depth 3 saved to benchmarks/analysis_wilt_depth_3.txt
+  Running analysis for max-depth 4...
+Misclassification score: 50
+Accuracy: 0.989667
+Average time taken to get the decision tree: 600.0360 seconds
+Optimal tree: [2,0.04104096,[1,0.04205611,[1,0.03610761,[2,0.02041392,1,0],[2,0.02626651,1,0]],[2,0.03362532,[1,0.04209512,0,1],[1,0.05181907,0,1]]],[3,0.22971995,[0,0.66647911,[1,0.06122988,0,1],[1,0.05578781,0,1]],[2,0.04929356,[1,0.06293122,0,1],[1,0.06899855,0,1]]]]
+  Analysis for depth 4 saved to benchmarks/analysis_wilt_depth_4.txt
+Done.
