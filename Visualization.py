@@ -10,8 +10,8 @@ os.makedirs(OUT_DIR, exist_ok=True)
 TIME_THRESHOLD = 2  # discard entries < 0.5%
 
 NAME_MAP = {
-    "SpecializedSolver::process_depth_one_feature<false>": "SplitEval-L",
-    "SpecializedSolver::process_depth_one_feature<true>": "SplitEval-R",
+    "SpecializedSolver::process_depth_one_feature<false>": "IsNotSameFeature",
+    "SpecializedSolver::process_depth_one_feature<true>": "IsSameFeature",
     "SpecializedSolver::get_best_left_right_scores": "ScoreSplit",
     "Dataview::split_data_points": "Partition",
     "Dataview::initialize_split_parameters": "InitSplit",
