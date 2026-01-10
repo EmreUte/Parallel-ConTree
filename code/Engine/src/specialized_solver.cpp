@@ -1,4 +1,5 @@
 #include "specialized_solver.h"
+#include <omp.h>
 
 class Depth1ScoreHelper {
 public:
@@ -38,13 +39,24 @@ public:
 };
 
 void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, const Configuration& solution_configuration, std::shared_ptr<Tree>& current_optimal_decision_tree, int upper_bound) {
-    for (int feature_index = 0; feature_index < dataview.get_feature_number(); feature_index++) {
-        create_optimal_decision_tree(dataview, solution_configuration, feature_index, current_optimal_decision_tree, std::min(upper_bound, current_optimal_decision_tree->misclassification_score));
-
-        if (current_optimal_decision_tree->misclassification_score <= solution_configuration.max_gap) {
-            return;
+    int feature_count = dataview.get_feature_number();
+    
+    // Parallelize feature exploration using OpenMP tasks
+    for (int feature_index = 0; feature_index < feature_count; feature_index++) {
+        #pragma omp task firstprivate(feature_index) shared(current_optimal_decision_tree, dataview, solution_configuration, upper_bound)
+        {
+            int current_score;
+            #pragma omp critical(specialized_tree_access)
+            {
+                current_score = current_optimal_decision_tree->misclassification_score;
+            }
+            
+            if (current_score > solution_configuration.max_gap) {
+                create_optimal_decision_tree(dataview, solution_configuration, feature_index, current_optimal_decision_tree, std::min(upper_bound, current_score));
+            }
         }
     }
+    #pragma omp taskwait
 }
 
 void SpecializedSolver::get_best_left_right_scores(const Dataview& dataview, int feature_index, int split_point, float threshold, std::shared_ptr<Tree> &left_optimal_dt, std::shared_ptr<Tree> &right_optimal_dt, int upper_bound) {
@@ -226,11 +238,17 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
     while(!unsearched_intervals.empty()) {
         auto current_interval = unsearched_intervals.front(); unsearched_intervals.pop();
 
-        if (interval_pruner.subinterval_pruning(current_interval, current_optimal_decision_tree->misclassification_score)) {
+        int current_misclassification;
+        #pragma omp critical(specialized_tree_access)
+        {
+            current_misclassification = current_optimal_decision_tree->misclassification_score;
+        }
+
+        if (interval_pruner.subinterval_pruning(current_interval, current_misclassification)) {
             continue;
         }
 
-        interval_pruner.interval_shrinking(current_interval, current_optimal_decision_tree->misclassification_score);
+        interval_pruner.interval_shrinking(current_interval, current_misclassification);
         const auto& [left, right, current_left_bound, current_right_bound] = current_interval;
         if(left > right) {
             continue;
@@ -245,30 +263,40 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
         std::shared_ptr<Tree> left_optimal_dt = std::make_shared<Tree>();
         std::shared_ptr<Tree> right_optimal_dt = std::make_shared<Tree>();
 
+        #pragma omp atomic
         statistics::total_number_of_specialized_solver_calls += 1;
-        get_best_left_right_scores(dataview, feature_index, split_point, threshold, left_optimal_dt, right_optimal_dt, current_optimal_decision_tree->misclassification_score);
+        
+        #pragma omp critical(specialized_tree_access)
+        {
+            current_misclassification = current_optimal_decision_tree->misclassification_score;
+        }
+        
+        get_best_left_right_scores(dataview, feature_index, split_point, threshold, left_optimal_dt, right_optimal_dt, current_misclassification);
         RUNTIME_ASSERT(left_optimal_dt->misclassification_score >= 0, "D2 - Left tree should have non-negative misclassification score.");
         RUNTIME_ASSERT(right_optimal_dt->misclassification_score >= 0, "D2 - Right tree should have non-negative misclassification score.");
 
         const int current_best_score = left_optimal_dt->misclassification_score + right_optimal_dt->misclassification_score;
 
-        if (current_best_score < current_optimal_decision_tree->misclassification_score) {
+        #pragma omp critical(specialized_tree_access)
+        {
+            if (current_best_score < current_optimal_decision_tree->misclassification_score) {
 
-            current_optimal_decision_tree->misclassification_score = current_best_score;
-            current_optimal_decision_tree->update_split(feature_index, threshold, left_optimal_dt, right_optimal_dt);
+                current_optimal_decision_tree->misclassification_score = current_best_score;
+                current_optimal_decision_tree->update_split(feature_index, threshold, left_optimal_dt, right_optimal_dt);
 
-            upper_bound = std::min(upper_bound, current_best_score);
-
-            if (current_best_score == 0) {
-                return;
+                upper_bound = std::min(upper_bound, current_best_score);
             }
+            current_misclassification = current_optimal_decision_tree->misclassification_score;
+        }
+        
+        if (current_best_score == 0) {
+            return;
+        }
 
-            if (PRINT_INTERMEDIARY_TIME_SOLUTIONS && solution_configuration.is_root) {
-                const auto stop = std::chrono::high_resolution_clock::now();
-                const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - starting_time);
-                std::cout << "Time taken to get the misclassification score " << current_best_score << ": " << duration.count() / 1000.0 << " seconds" << std::endl;
-            }
-
+        if (PRINT_INTERMEDIARY_TIME_SOLUTIONS && solution_configuration.is_root && current_best_score == current_misclassification) {
+            const auto stop = std::chrono::high_resolution_clock::now();
+            const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - starting_time);
+            std::cout << "Time taken to get the misclassification score " << current_best_score << ": " << duration.count() / 1000.0 << " seconds" << std::endl;
         }
 
         interval_pruner.add_result(mid, left_optimal_dt->misclassification_score, right_optimal_dt->misclassification_score);
@@ -277,7 +305,7 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
             continue;
         }
 
-        const int score_difference = current_best_score - current_optimal_decision_tree->misclassification_score;
+        const int score_difference = current_best_score - current_misclassification;
         const auto [new_bound_left, new_bound_right] = interval_pruner.neighbourhood_pruning(score_difference, left, right, mid);
 
         if (new_bound_left <= right) {

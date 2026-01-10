@@ -52,8 +52,16 @@ set(INCLUDE_DIRS
 # Specify include directories
 include_directories(${INCLUDE_DIRS})
 
+# Find OpenMP
+find_package(OpenMP REQUIRED)
+
 # Create the executable
 add_executable(ConTree ${SRC_FILES})
+
+# Link OpenMP
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(ConTree PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 # Set target properties based on build type
 if (CMAKE_BUILD_TYPE STREQUAL Release)        

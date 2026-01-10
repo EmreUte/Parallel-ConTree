@@ -2,6 +2,7 @@
 #include <climits>
 #include <iomanip>
 #include <iostream>
+#include <omp.h>
 
 #include "cache.h"
 #include "configuration.h"
@@ -38,7 +39,15 @@ void create_optimal_decision_tree(std::string file_name, int run_number, Configu
         do {
             Cache::global_cache = Cache(config.max_depth, unsorted_dataset.get_instance_number());
             config.is_root = true;
-            GeneralSolver::create_optimal_decision_tree(dataview, config, optimal_decision_tree, INT_MAX);
+            
+            // Start parallel region at top level for task-based parallelism
+            #pragma omp parallel
+            {
+                #pragma omp single
+                {
+                    GeneralSolver::create_optimal_decision_tree(dataview, config, optimal_decision_tree, INT_MAX);
+                }
+            }
 
             max_gap = int(max_gap * config.max_gap_decay);
         } while (max_gap > 0);
