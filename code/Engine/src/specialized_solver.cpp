@@ -30,7 +30,7 @@ public:
     int can_skip = 0;
     int current_element_count = 0;
 
-    const int size;
+    int size;
     int max_label_frequency{ 0 };
     int max_label{ 0 };
 
@@ -39,9 +39,10 @@ public:
 };
 
 void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, const Configuration& solution_configuration, std::shared_ptr<Tree>& current_optimal_decision_tree, int upper_bound) {
-    int feature_count = dataview.get_feature_number();
+    const int feature_count = dataview.get_feature_number();
     
-    // Parallelize feature exploration using OpenMP tasks
+    // Parallel exploration of root features using OpenMP tasks
+    // Note: We assume we're already inside a parallel region from GeneralSolver
     for (int feature_index = 0; feature_index < feature_count; feature_index++) {
         #pragma omp task firstprivate(feature_index) shared(current_optimal_decision_tree, dataview, solution_configuration, upper_bound)
         {
@@ -52,7 +53,8 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
             }
             
             if (current_score > solution_configuration.max_gap) {
-                create_optimal_decision_tree(dataview, solution_configuration, feature_index, current_optimal_decision_tree, std::min(upper_bound, current_score));
+                create_optimal_decision_tree(dataview, solution_configuration, feature_index, 
+                    current_optimal_decision_tree, std::min(upper_bound, current_score));
             }
         }
     }
@@ -100,7 +102,7 @@ void SpecializedSolver::get_best_left_right_scores(const Dataview& dataview, int
     left_tree.classification_score = std::max(left_tree.classification_score, left_tree.max_label_frequency);
     right_tree.classification_score = std::max(right_tree.classification_score, right_tree.max_label_frequency);
 
-    for (int current_feature_index = 0 ; current_feature_index < dataview.get_feature_number(); current_feature_index++) {
+    for (int current_feature_index = 0; current_feature_index < dataview.get_feature_number(); current_feature_index++) {
 
         if (current_feature_index == feature_index) {
             process_depth_one_feature<true>(dataview, feature_index, split_point, current_feature_index, split_index,
@@ -115,6 +117,7 @@ void SpecializedSolver::get_best_left_right_scores(const Dataview& dataview, int
             break;
         }
     }
+
 
     if (left_tree.classification_score == left_tree.max_label_frequency) {
         left_optimal_dt->make_leaf(left_tree.max_label, left_tree.size - left_tree.classification_score);
@@ -180,17 +183,28 @@ void SpecializedSolver::process_depth_one_feature(const Dataview& dataview,
         int left_classification_score = -1;
         int right_classification_score = -1;
 
-        int left_label = -1;
-        int right_label = -1;
-
+        // SIMD max reduction to find maximum frequencies (simd because thread overhead and avoid nested parallelism)
+        #pragma omp simd reduction(max:left_classification_score, right_classification_score)
         for (int label_value = 0; label_value < class_number; label_value++) {
-            if (tree.current_label_frequency[label_value] > left_classification_score) {
-                left_classification_score = tree.current_label_frequency[label_value];
+            int left_freq = tree.current_label_frequency[label_value];
+            int right_freq = tree.label_frequency[label_value] - tree.current_label_frequency[label_value];
+            left_classification_score = std::max(left_classification_score, left_freq);
+            right_classification_score = std::max(right_classification_score, right_freq);
+        }
+
+        // Find labels corresponding to max frequencies
+        int left_label = 0;
+        int right_label = 0;
+        for (int label_value = 0; label_value < class_number; label_value++) {
+            if (tree.current_label_frequency[label_value] == left_classification_score) {
                 left_label = label_value;
+                break;
             }
-            if (tree.label_frequency[label_value] - tree.current_label_frequency[label_value] > right_classification_score) {
-                right_classification_score = tree.label_frequency[label_value] - tree.current_label_frequency[label_value];
+        }
+        for (int label_value = 0; label_value < class_number; label_value++) {
+            if (tree.label_frequency[label_value] - tree.current_label_frequency[label_value] == right_classification_score) {
                 right_label = label_value;
+                break;
             }
         }
 
@@ -266,11 +280,6 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
         #pragma omp atomic
         statistics::total_number_of_specialized_solver_calls += 1;
         
-        #pragma omp critical(specialized_tree_access)
-        {
-            current_misclassification = current_optimal_decision_tree->misclassification_score;
-        }
-        
         get_best_left_right_scores(dataview, feature_index, split_point, threshold, left_optimal_dt, right_optimal_dt, current_misclassification);
         RUNTIME_ASSERT(left_optimal_dt->misclassification_score >= 0, "D2 - Left tree should have non-negative misclassification score.");
         RUNTIME_ASSERT(right_optimal_dt->misclassification_score >= 0, "D2 - Right tree should have non-negative misclassification score.");
@@ -279,16 +288,15 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
 
         #pragma omp critical(specialized_tree_access)
         {
+            // Re-check under lock since another thread may have updated
             if (current_best_score < current_optimal_decision_tree->misclassification_score) {
-
                 current_optimal_decision_tree->misclassification_score = current_best_score;
                 current_optimal_decision_tree->update_split(feature_index, threshold, left_optimal_dt, right_optimal_dt);
-
                 upper_bound = std::min(upper_bound, current_best_score);
             }
             current_misclassification = current_optimal_decision_tree->misclassification_score;
         }
-        
+
         if (current_best_score == 0) {
             return;
         }
