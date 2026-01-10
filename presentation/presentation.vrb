@@ -1,0 +1,28 @@
+\frametitle{Atomic Operations for Statistics}
+For simple counters, use \texttt{atomic} instead of \texttt{critical}:
+
+\begin{lstlisting}
+#pragma omp atomic
+statistics::total_number_of_specialized_solver_calls += 1;
+\end{lstlisting}
+
+\vspace{1em}
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{atomic}
+\begin{itemize}
+    \item Single memory operation
+    \item Hardware-level guarantee
+    \item Very low overhead
+    \item Limited to simple operations
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{critical}
+\begin{itemize}
+    \item Arbitrary code block
+    \item Software lock
+    \item Higher overhead
+    \item More flexible
+\end{itemize}
+\end{columns}

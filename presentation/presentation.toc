@@ -1,0 +1,8 @@
+\beamer@sectionintoc {1}{Problem Overview}{3}{0}{1}
+\beamer@sectionintoc {2}{Parallelization Architecture}{4}{0}{2}
+\beamer@sectionintoc {3}{Level 1: main.cpp - Thread Pool}{5}{0}{3}
+\beamer@sectionintoc {4}{Level 2: general\_solver.cpp - Subtree Parallelism}{7}{0}{4}
+\beamer@sectionintoc {5}{Level 3: specialized\_solver.cpp - Feature Parallelism}{11}{0}{5}
+\beamer@sectionintoc {6}{Avoiding Nested Parallelism}{16}{0}{6}
+\beamer@sectionintoc {7}{Performance Results}{18}{0}{7}
+\beamer@sectionintoc {8}{Summary}{19}{0}{8}
