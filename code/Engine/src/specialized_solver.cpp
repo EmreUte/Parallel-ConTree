@@ -183,8 +183,6 @@ void SpecializedSolver::process_depth_one_feature(const Dataview& dataview,
         int left_classification_score = -1;
         int right_classification_score = -1;
 
-        // SIMD max reduction to find maximum frequencies (simd because thread overhead and avoid nested parallelism)
-        #pragma omp simd reduction(max:left_classification_score, right_classification_score)
         for (int label_value = 0; label_value < class_number; label_value++) {
             int left_freq = tree.current_label_frequency[label_value];
             int right_freq = tree.label_frequency[label_value] - tree.current_label_frequency[label_value];
@@ -192,9 +190,9 @@ void SpecializedSolver::process_depth_one_feature(const Dataview& dataview,
             right_classification_score = std::max(right_classification_score, right_freq);
         }
 
-        // Find labels corresponding to max frequencies
         int left_label = 0;
         int right_label = 0;
+
         for (int label_value = 0; label_value < class_number; label_value++) {
             if (tree.current_label_frequency[label_value] == left_classification_score) {
                 left_label = label_value;
