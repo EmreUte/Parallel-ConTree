@@ -27,15 +27,27 @@ void GeneralSolver::create_optimal_decision_tree(const Dataview& dataview, const
         return;
     }
 
+    // Parallel feature exploration 
     for (int feature_nr = 0; feature_nr < dataview.get_feature_number(); feature_nr++) {
         int feature_index = dataview.gini_values[feature_nr].second;
-        create_optimal_decision_tree(dataview, solution_configuration, feature_index, current_optimal_decision_tree, std::min(upper_bound, current_optimal_decision_tree->misclassification_score));
-
-        if (current_optimal_decision_tree->misclassification_score == 0) {
-            return;
+        
+        #pragma omp task firstprivate(feature_index) shared(current_optimal_decision_tree, dataview, solution_configuration, upper_bound)
+        {
+            int current_upper_bound;
+            #pragma omp atomic read
+            current_upper_bound = current_optimal_decision_tree->misclassification_score;
+            
+            if (current_upper_bound > 0 && solution_configuration.stopwatch.IsWithinTimeLimit()) {
+                create_optimal_decision_tree(dataview, solution_configuration, feature_index, current_optimal_decision_tree, std::min(upper_bound, current_upper_bound));
+            }
         }
-        if (!solution_configuration.stopwatch.IsWithinTimeLimit()) return;
     }
+    #pragma omp taskwait
+
+    if (current_optimal_decision_tree->misclassification_score == 0) {
+        return;
+    }
+    if (!solution_configuration.stopwatch.IsWithinTimeLimit()) return;
 
     if (current_optimal_decision_tree->misclassification_score <= upper_bound) {
         Cache::global_cache.store(dataview, solution_configuration.max_depth, current_optimal_decision_tree);
