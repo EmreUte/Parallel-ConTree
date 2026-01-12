@@ -42,4 +42,4 @@ else
 fi
 
 # Use NUMA interleaved memory allocation
-exec numactl --interleave=all "$@"
+exec numactl --interleave=all "$@" 
