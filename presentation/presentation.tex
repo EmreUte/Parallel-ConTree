@@ -22,7 +22,7 @@
 
 \title{OpenMP Parallelization in ConTree}
 \subtitle{Optimal Decision Tree Solver - CS406 Project}
-\author{Borhan Javadian \and Emre Ute \and Harun Yilmaz \and \\ Deniz Kaan Yilmaz \and Tolga Toker \and Yusuf Demirci}
+\author[]{Borhan Javadian \and Emre Ute \and Harun Yilmaz \and \\ Deniz Kaan Yilmaz \and Tolga Toker \and Yusuf Demirci}
 \institute{Group 2}
 \date{\today}
 
@@ -215,24 +215,6 @@ if (should_parallelize) {
     #pragma omp taskwait  // Wait for BOTH to complete before using results
 }
 \end{lstlisting}
-\end{frame}
-
-\begin{frame}{Understanding the OpenMP Directives}
-\begin{description}
-    \item[\texttt{\#pragma omp task}] Creates a \textbf{unit of work} that can run on any thread
-    \item[\texttt{shared(...)}] These variables are \textbf{shared} between parent and task
-    \item[\texttt{firstprivate(...)}] Each task gets its own \textbf{private copy} (initialized from parent)
-    \item[\texttt{\#pragma omp taskwait}] \textbf{Blocks} until all child tasks complete
-\end{description}
-
-\vspace{1em}
-\begin{block}{Why shared for dataview and tree?}
-\begin{itemize}
-    \item We want the task to \textbf{write results} back to the parent's variables
-    \item Each task works on \textbf{different objects} (left vs right)
-    \item No conflict because they don't touch the same memory!
-\end{itemize}
-\end{block}
 \end{frame}
 
 \begin{frame}{Granularity Cutoff: Why It Matters}
@@ -437,10 +419,10 @@ Initially, we added \texttt{\#pragma omp parallel} inside specialized\_solver:
     \node[task] (t3) at (1,1) {Task 3};
     \node[task] (t4) at (3,1) {Task 4};
     
-    \node[task] (t1a) at (-3.5,0) {Task};
+    \node[task] (t1a) at (-4,0) {Task};
     \node[task] (t1b) at (-2.5,0) {Task};
-    \node[task] (t2a) at (-1.5,0) {Task};
-    \node[task] (t2b) at (-0.5,0) {Task};
+    \node[task] (t2a) at (-1,0) {Task};
+    \node[task] (t2b) at (0.5,0) {Task};
     
     \draw[->] (pool) -- (t1);
     \draw[->] (pool) -- (t2);
@@ -489,35 +471,116 @@ exec numactl --interleave=all "$@"
 \textbf{Usage:} \texttt{./run\_smart.sh ./ConTree -file data.txt -max-depth 3}
 \end{frame}
 
-\begin{frame}{Benchmark Results}
-\textbf{Dataset:} avila.txt (20,867 instances, 10 features)\\
-\textbf{Configuration:} max-depth 3
+\begin{frame}{Benchmark Results: Overview}
+\textbf{Configuration:} 60 threads (30 for raisin), SPREAD binding, 10 runs averaged
 
-\vspace{0.5em}
+\vspace{0.3em}
 \begin{table}
 \centering
-\begin{tabular}{|l|c|c|c|}
+\small
+\begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Configuration} & \textbf{Time} & \textbf{Score} & \textbf{Status} \\
+\textbf{Dataset} & \textbf{Depth} & \textbf{Time (s)} & \textbf{Score} & \textbf{Accuracy} \\
 \hline
-Sequential baseline & 31.5s & 8664 & Correct \\
+avila.txt & 3 & 2.0046 & 8664 & 58.5\% \\
 \hline
-OpenMP tasks (final) & 6.5-8.5s & 8664 & Correct \\
+bean.txt & 3 & 2.3136 & 1748 & 87.2\% \\
 \hline
-Nested parallel (avoided) & 25.8s & 8664 & Too slow \\
+raisin.txt & 4 & 6.0740 & 74 & 91.8\% \\
+\hline
+segment.txt & 4 & 6.9763 & 101 & 95.6\% \\
 \hline
 \end{tabular}
 \end{table}
 
-\vspace{0.5em}
+\vspace{0.3em}
 \begin{block}{Key Observations}
 \begin{itemize}
-    \item Task scheduling introduces $\sim$30\% runtime variance
-    \item Current dataset may be too small to see parallel speedup
-    \item Critical sections add synchronization overhead
-    \item Expected to scale better on larger datasets
+    \item Depth-4 problems take 2.5-3x longer than depth-3
+    \item Higher accuracy correlates with fewer misclassifications
+    \item Thread count tuned per dataset (raisin benefits from 30 threads)
 \end{itemize}
 \end{block}
+\end{frame}
+
+\begin{frame}{Benchmark Results: Execution Time}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Bar chart for execution time
+    \draw[thick,->] (0,0) -- (10,0) node[right] {};
+    \draw[thick,->] (0,0) -- (0,5) node[above] {\small Time (s)};
+    
+    % Y-axis labels
+    \foreach \y/\label in {0/0, 1/2, 2/4, 3/6, 4/8} {
+        \draw (-0.1,\y) -- (0.1,\y);
+        \node[left] at (-0.2,\y) {\tiny \label};
+    }
+    
+    % Bars (scaled: 1 unit = 2 seconds)
+    \fill[blue!60] (1,0) rectangle (2.2,1.00);
+    \fill[green!60] (3,0) rectangle (4.2,1.16);
+    \fill[orange!60] (5,0) rectangle (6.2,3.04);
+    \fill[red!60] (7,0) rectangle (8.2,3.49);
+    
+    % Labels
+    \node[below, font=\tiny] at (1.6,-0.3) {avila};
+    \node[below, font=\tiny] at (3.6,-0.3) {bean};
+    \node[below, font=\tiny] at (5.6,-0.3) {raisin};
+    \node[below, font=\tiny] at (7.6,-0.3) {segment};
+    
+    % Values on top
+    \node[above, font=\tiny] at (1.6,1.00) {2.00s};
+    \node[above, font=\tiny] at (3.6,1.16) {2.31s};
+    \node[above, font=\tiny] at (5.6,3.04) {6.07s};
+    \node[above, font=\tiny] at (7.6,3.49) {6.98s};
+    
+    % Depth annotations
+    \node[font=\tiny, blue!80] at (1.6,0.5) {D3};
+    \node[font=\tiny, green!80!black] at (3.6,0.55) {D3};
+    \node[font=\tiny, orange!80!black] at (5.6,1.5) {D4};
+    \node[font=\tiny, red!80!black] at (7.6,1.7) {D4};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3em}
+\textbf{Insight:} Depth-4 problems show exponential growth in search space, resulting in 2.5-3x longer execution times compared to depth-3 problems.
+\end{frame}
+
+\begin{frame}{Benchmark Results: Accuracy}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+    % Bar chart for accuracy
+    \draw[thick,->] (0,0) -- (10,0) node[right] {};
+    \draw[thick,->] (0,0) -- (0,5.5) node[above] {\small Accuracy (\%)};
+    
+    % Y-axis labels
+    \foreach \y/\label in {0/0, 1/20, 2/40, 3/60, 4/80, 5/100} {
+        \draw (-0.1,\y) -- (0.1,\y);
+        \node[left] at (-0.2,\y) {\tiny \label};
+    }
+    
+    % Bars (scaled: 100% = 5 units)
+    \fill[blue!60] (1,0) rectangle (2.2,2.92);
+    \fill[green!60] (3,0) rectangle (4.2,4.36);
+    \fill[orange!60] (5,0) rectangle (6.2,4.59);
+    \fill[red!60] (7,0) rectangle (8.2,4.78);
+    
+    % Labels
+    \node[below, font=\tiny] at (1.6,-0.3) {avila};
+    \node[below, font=\tiny] at (3.6,-0.3) {bean};
+    \node[below, font=\tiny] at (5.6,-0.3) {raisin};
+    \node[below, font=\tiny] at (7.6,-0.3) {segment};
+    
+    % Values on top
+    \node[above, font=\tiny] at (1.6,2.92) {58.5\%};
+    \node[above, font=\tiny] at (3.6,4.36) {87.2\%};
+    \node[above, font=\tiny] at (5.6,4.59) {91.8\%};
+    \node[above, font=\tiny] at (7.6,4.78) {95.6\%};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3em}
+\textbf{Insight:} All solutions are \textbf{provably optimal} for their depth constraint. Lower accuracy on avila reflects dataset complexity, not solver quality.
 \end{frame}
 
 %===============================================================================
@@ -542,6 +605,30 @@ Nested parallel (avoided) & 25.8s & 8664 & Too slow \\
 \begin{alertblock}{The Big Picture}
 OpenMP tasks provide a natural fit for recursive tree algorithms - each subproblem becomes a task, and the runtime handles scheduling and load balancing.
 \end{alertblock}
+\end{frame}
+
+%===============================================================================
+\section{Room for Improvement}
+
+\begin{frame}{Room for Improvement}
+\textbf{GPU Parallelization:}
+
+\vspace{0.5em}
+\textbf{Cache \& Memory Optimization:}
+\begin{itemize}
+    \item Data layout optimization for better cache locality
+    \item NUMA-aware memory allocation beyond \texttt{numactl}
+    \item Reduce memory copies when creating dataviews
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Algorithmic Improvements:}
+\begin{itemize}
+    \item Better work-stealing strategies for imbalanced trees
+    \item Dynamic granularity cutoffs based on runtime heuristics
+    \item Priority-based task scheduling (explore promising splits first)
+    \item Redesign the codebase to decrease control divergence
+\end{itemize}
 \end{frame}
 
 %===============================================================================
