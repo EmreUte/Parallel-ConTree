@@ -1,6 +1,8 @@
 #include "general_solver.h"
 #include <omp.h>
 
+#include "gpu_solver.h"
+
 void GeneralSolver::create_optimal_decision_tree(const Dataview& dataview, const Configuration& solution_configuration, std::shared_ptr<Tree>& current_optimal_decision_tree, int upper_bound) {
     if (current_optimal_decision_tree->misclassification_score == 0 || dataview.get_dataset_size() == 0) {
         return;
@@ -19,6 +21,16 @@ void GeneralSolver::create_optimal_decision_tree(const Dataview& dataview, const
     }
 
     if (current_optimal_decision_tree->misclassification_score <= solution_configuration.max_gap || dataview.get_dataset_size() == 1) {
+        return;
+    }
+
+    const bool should_use_gpu = solution_configuration.enable_gpu
+        && solution_configuration.max_depth > 0
+        && solution_configuration.depth_from_root >= solution_configuration.gpu_start_depth
+        && dataview.get_dataset_size() >= solution_configuration.gpu_min_instances;
+
+    if (should_use_gpu) {
+        GpuSolver::create_optimal_decision_tree(dataview, solution_configuration, current_optimal_decision_tree, upper_bound);
         return;
     }
 

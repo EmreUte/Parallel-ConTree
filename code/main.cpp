@@ -94,6 +94,11 @@ int main(int argc, char *argv[]) {
     config.max_gap = int(parameters.GetIntegerParameter("max-gap"));
     config.max_gap_decay = float(parameters.GetFloatParameter("max-gap-decay"));
     config.sort_gini = parameters.GetBooleanParameter("sort-features-gini-index");
+    config.enable_gpu = parameters.GetBooleanParameter("enable-gpu");
+    config.gpu_start_depth = int(parameters.GetIntegerParameter("gpu-start-depth"));
+    config.gpu_min_instances = int(parameters.GetIntegerParameter("gpu-min-instances"));
+    config.depth_from_root = 0;
+    config.root_max_depth = config.max_depth;
     
     
     if (config.print_logs) {

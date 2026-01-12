@@ -31,8 +31,16 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
     endif()
 
 endif()
-   
-    
+
+# Optional CUDA support for hybrid execution
+option(ENABLE_CUDA "Build with CUDA support for GPU offload" OFF)
+if (ENABLE_CUDA)
+    enable_language(CUDA)
+    find_package(CUDA REQUIRED)
+    set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3")
+    message(STATUS "CUDA enabled - hybrid GPU acceleration active")
+endif()
 
 # Gather source files
 file(GLOB SRC_FILES
@@ -41,6 +49,14 @@ file(GLOB SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/Engine/src/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
+
+# Gather CUDA source files if enabled
+if (ENABLE_CUDA)
+    file(GLOB CUDA_SRC_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/Engine/src/*.cu
+    )
+    list(APPEND SRC_FILES ${CUDA_SRC_FILES})
+endif()
 
 # Define include directories
 set(INCLUDE_DIRS
@@ -63,6 +79,14 @@ if(OpenMP_CXX_FOUND)
     target_link_libraries(ConTree PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
+# CUDA configuration
+if (ENABLE_CUDA)
+    target_compile_definitions(ConTree PUBLIC CONTREE_ENABLE_CUDA)
+    set_target_properties(ConTree PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+    target_link_libraries(ConTree PUBLIC CUDA::cudart CUDA::cuda_driver)
+    message(STATUS "CUDA libraries linked: cudart, cuda_driver")
+endif()
+
 # Set target properties based on build type
 if (CMAKE_BUILD_TYPE STREQUAL Release)        
     if( ipo_supported )
@@ -81,4 +105,3 @@ else()
         message(STATUS "No profiler")
     endif()
 endif()
-

@@ -87,6 +87,34 @@ ParameterHandler ParameterHandler::DefineParameters() {
 
 	parameters.DefineBooleanParameter
 	(
+		"enable-gpu",
+		"Enable hybrid CPU/GPU execution for deeper subtrees (requires CUDA build).",
+		false,
+		"Algorithmic Parameters"
+	);
+
+	parameters.DefineIntegerParameter
+	(
+		"gpu-start-depth",
+		"Depth (root=0) at or beyond which subtrees are offloaded to GPU when enabled.",
+		3, // default value
+		"Algorithmic Parameters",
+		0, // min value
+		64 // max value
+	);
+
+	parameters.DefineIntegerParameter
+	(
+		"gpu-min-instances",
+		"Minimum number of instances in a subproblem before attempting GPU offload.",
+		2048, // default value
+		"Algorithmic Parameters",
+		1, // min value
+		100000000 // max value
+	);
+
+	parameters.DefineBooleanParameter
+	(
 		"sort-features-gini-index",
 		"Sort features based on Gini index.",
 		false,

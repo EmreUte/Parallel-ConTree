@@ -36,6 +36,11 @@ struct Configuration {
     float max_gap_decay;
     bool print_logs;
     bool use_upper_bound;
+    bool enable_gpu{ false };
+    int gpu_start_depth{ 3 }; // switch to GPU when depth_from_root >= gpu_start_depth
+    int gpu_min_instances{ 2048 }; // avoid GPU on tiny subproblems
+    int depth_from_root{ 0 }; // 0 at root, increment per level
+    int root_max_depth{ 0 }; // recorded at root for reference
     bool is_root{ false };
     bool sort_gini{ false };
     Stopwatch stopwatch;
