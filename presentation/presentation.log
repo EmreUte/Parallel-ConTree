@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.1.10)  11 JAN 2026 00:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.1.10)  12 JAN 2026 22:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1132,7 +1132,7 @@ Overfull \hbox (156.48802pt too wide) in paragraph at lines 143--143
 \openout4 = `presentation.vrb'.
 
 
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 164--164
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 166--166
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1144,14 +1144,14 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [7
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 166--166
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 168--168
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
 \openout4 = `presentation.vrb'.
 
 
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 193--193
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 189--189
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1163,11 +1163,18 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [8
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 211--211
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 191--191
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
+\openout4 = `presentation.vrb'.
 
+
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 218--218
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+(./presentation.vrb)
 Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  [][]  \OT1/cmss/m/n/6 ([])  
  []
@@ -1175,7 +1182,7 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [9
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 246--246
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 236--236
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1187,7 +1194,7 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [10
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 270--270
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 271--271
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1199,18 +1206,11 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [11
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 272--272
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 295--295
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
-\openout4 = `presentation.vrb'.
 
-
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 301--301
- [][]  \OT1/cmss/m/n/6 ([])  
- []
-
-(./presentation.vrb)
 Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  [][]  \OT1/cmss/m/n/6 ([])  
  []
@@ -1218,14 +1218,14 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [12
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 303--303
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 297--297
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
 \openout4 = `presentation.vrb'.
 
 
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 327--327
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 326--326
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1237,26 +1237,14 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [13
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 346--346
- [][]  \OT1/cmss/m/n/6 ([])  
- []
-
-
-Overfull \hbox (156.48802pt too wide) has occurred while \output is active
- [][]  \OT1/cmss/m/n/6 ([])  
- []
-
-[14
-
-]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 348--348
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 328--328
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
 \openout4 = `presentation.vrb'.
 
 
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 376--376
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 352--352
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1265,10 +1253,10 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
-[15
+[14
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 400--400
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 371--371
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1277,10 +1265,29 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
+[15
+
+]
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 373--373
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+\openout4 = `presentation.vrb'.
+
+
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 401--401
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+(./presentation.vrb)
+Overfull \hbox (156.48802pt too wide) has occurred while \output is active
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
 [16
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 437--437
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 425--425
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1292,7 +1299,7 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [17
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 471--471
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 462--462
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1304,11 +1311,30 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [18
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 495--495
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 467--467
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
+\openout4 = `presentation.vrb'.
 
+
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 490--490
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+(./presentation.vrb
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2023/02/27 1.9 listings language file
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2023/02/27 1.9 listings language file
+)
+LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
+10.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmtt.fd
+File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+))
 Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  [][]  \OT1/cmss/m/n/6 ([])  
  []
@@ -1316,7 +1342,7 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
 [19
 
 ]
-Overfull \hbox (156.48802pt too wide) in paragraph at lines 505--505
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 521--521
  [][]  \OT1/cmss/m/n/6 ([])  
  []
 
@@ -1326,6 +1352,30 @@ Overfull \hbox (156.48802pt too wide) has occurred while \output is active
  []
 
 [20
+
+]
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 545--545
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+
+Overfull \hbox (156.48802pt too wide) has occurred while \output is active
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+[21
+
+]
+Overfull \hbox (156.48802pt too wide) in paragraph at lines 555--555
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+
+Overfull \hbox (156.48802pt too wide) has occurred while \output is active
+ [][]  \OT1/cmss/m/n/6 ([])  
+ []
+
+[22
 
 ]
 \tf@nav=\write6
@@ -1343,30 +1393,31 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `presentation.out' has not changed.
-(rerunfilecheck)             Checksum: 9550757CA4F2A661B9FA25BF4D9D5C39;1560.
+(rerunfilecheck)             Checksum: 9D94E6E65295083F8C9E6900ECFB9FEF;1619.
  ) 
 Here is how much of TeX's memory you used:
- 29163 strings out of 476182
- 590525 string characters out of 5795595
+ 29310 strings out of 476182
+ 592737 string characters out of 5795595
  2146975 words of memory out of 5000000
- 50560 multiletter control sequences out of 15000+600000
- 566572 words of font info for 68 fonts, out of 8000000 for 9000
+ 50691 multiletter control sequences out of 15000+600000
+ 566869 words of font info for 69 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 101i,15n,107p,404b,1344s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmtt8.pfb>
-Output written on presentation.pdf (20 pages, 204524 bytes).
+ 101i,15n,107p,432b,1542s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </home/emreute/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tctt0800.4
+50pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmtt8.pfb>
+Output written on presentation.pdf (22 pages, 214699 bytes).
 PDF statistics:
- 853 PDF objects out of 1000 (max. 8388607)
- 682 compressed objects within 7 object streams
- 49 named destinations out of 1000 (max. 500000)
+ 915 PDF objects out of 1000 (max. 8388607)
+ 736 compressed objects within 8 object streams
+ 53 named destinations out of 1000 (max. 500000)
  641 words of extra memory for PDF output out of 10000 (max. 10000000)
 

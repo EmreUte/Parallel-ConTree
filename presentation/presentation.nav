@@ -21,7 +21,7 @@
 \headcommand {\beamer@framepages {6}{6}}
 \headcommand {\beamer@sectionpages {5}{6}}
 \headcommand {\beamer@subsectionpages {5}{6}}
-\headcommand {\sectionentry {4}{Level 2: general\_solver.cpp - Subtree Parallelism}{7}{Level 2: general\_solver.cpp - Subtree Parallelism}{0}}
+\headcommand {\sectionentry {4}{Level 2: general\_solver.cpp - Subtree \& Feature Parallelism}{7}{Level 2: general\_solver.cpp - Subtree \& Feature Parallelism}{0}}
 \headcommand {\slideentry {4}{0}{1}{7/7}{}{0}}
 \headcommand {\beamer@framepages {7}{7}}
 \headcommand {\slideentry {4}{0}{2}{8/8}{}{0}}
@@ -30,40 +30,44 @@
 \headcommand {\beamer@framepages {9}{9}}
 \headcommand {\slideentry {4}{0}{4}{10/10}{}{0}}
 \headcommand {\beamer@framepages {10}{10}}
-\headcommand {\beamer@sectionpages {7}{10}}
-\headcommand {\beamer@subsectionpages {7}{10}}
-\headcommand {\sectionentry {5}{Level 3: specialized\_solver.cpp - Feature Parallelism}{11}{Level 3: specialized\_solver.cpp - Feature Parallelism}{0}}
-\headcommand {\slideentry {5}{0}{1}{11/11}{}{0}}
+\headcommand {\slideentry {4}{0}{5}{11/11}{}{0}}
 \headcommand {\beamer@framepages {11}{11}}
-\headcommand {\slideentry {5}{0}{2}{12/12}{}{0}}
+\headcommand {\beamer@sectionpages {7}{11}}
+\headcommand {\beamer@subsectionpages {7}{11}}
+\headcommand {\sectionentry {5}{Level 3: specialized\_solver.cpp - Feature Parallelism}{12}{Level 3: specialized\_solver.cpp - Feature Parallelism}{0}}
+\headcommand {\slideentry {5}{0}{1}{12/12}{}{0}}
 \headcommand {\beamer@framepages {12}{12}}
-\headcommand {\slideentry {5}{0}{3}{13/13}{}{0}}
+\headcommand {\slideentry {5}{0}{2}{13/13}{}{0}}
 \headcommand {\beamer@framepages {13}{13}}
-\headcommand {\slideentry {5}{0}{4}{14/14}{}{0}}
+\headcommand {\slideentry {5}{0}{3}{14/14}{}{0}}
 \headcommand {\beamer@framepages {14}{14}}
-\headcommand {\slideentry {5}{0}{5}{15/15}{}{0}}
+\headcommand {\slideentry {5}{0}{4}{15/15}{}{0}}
 \headcommand {\beamer@framepages {15}{15}}
-\headcommand {\beamer@sectionpages {11}{15}}
-\headcommand {\beamer@subsectionpages {11}{15}}
-\headcommand {\sectionentry {6}{Avoiding Nested Parallelism}{16}{Avoiding Nested Parallelism}{0}}
-\headcommand {\slideentry {6}{0}{1}{16/16}{}{0}}
+\headcommand {\slideentry {5}{0}{5}{16/16}{}{0}}
 \headcommand {\beamer@framepages {16}{16}}
-\headcommand {\slideentry {6}{0}{2}{17/17}{}{0}}
+\headcommand {\beamer@sectionpages {12}{16}}
+\headcommand {\beamer@subsectionpages {12}{16}}
+\headcommand {\sectionentry {6}{Avoiding Nested Parallelism}{17}{Avoiding Nested Parallelism}{0}}
+\headcommand {\slideentry {6}{0}{1}{17/17}{}{0}}
 \headcommand {\beamer@framepages {17}{17}}
-\headcommand {\beamer@sectionpages {16}{17}}
-\headcommand {\beamer@subsectionpages {16}{17}}
-\headcommand {\sectionentry {7}{Performance Results}{18}{Performance Results}{0}}
-\headcommand {\slideentry {7}{0}{1}{18/18}{}{0}}
+\headcommand {\slideentry {6}{0}{2}{18/18}{}{0}}
 \headcommand {\beamer@framepages {18}{18}}
-\headcommand {\beamer@sectionpages {18}{18}}
-\headcommand {\beamer@subsectionpages {18}{18}}
-\headcommand {\sectionentry {8}{Summary}{19}{Summary}{0}}
-\headcommand {\slideentry {8}{0}{1}{19/19}{}{0}}
+\headcommand {\beamer@sectionpages {17}{18}}
+\headcommand {\beamer@subsectionpages {17}{18}}
+\headcommand {\sectionentry {7}{Performance Results}{19}{Performance Results}{0}}
+\headcommand {\slideentry {7}{0}{1}{19/19}{}{0}}
 \headcommand {\beamer@framepages {19}{19}}
-\headcommand {\slideentry {8}{0}{2}{20/20}{}{0}}
+\headcommand {\slideentry {7}{0}{2}{20/20}{}{0}}
 \headcommand {\beamer@framepages {20}{20}}
-\headcommand {\beamer@partpages {1}{20}}
-\headcommand {\beamer@subsectionpages {19}{20}}
 \headcommand {\beamer@sectionpages {19}{20}}
-\headcommand {\beamer@documentpages {20}}
-\headcommand {\gdef \inserttotalframenumber {20}}
+\headcommand {\beamer@subsectionpages {19}{20}}
+\headcommand {\sectionentry {8}{Summary}{21}{Summary}{0}}
+\headcommand {\slideentry {8}{0}{1}{21/21}{}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {8}{0}{2}{22/22}{}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\beamer@partpages {1}{22}}
+\headcommand {\beamer@subsectionpages {21}{22}}
+\headcommand {\beamer@sectionpages {21}{22}}
+\headcommand {\beamer@documentpages {22}}
+\headcommand {\gdef \inserttotalframenumber {22}}

@@ -138,9 +138,34 @@ All nested functions use \textbf{tasks only} - no new parallel regions!
 \end{frame}
 
 %===============================================================================
-\section{Level 2: general\_solver.cpp - Subtree Parallelism}
+\section{Level 2: general\_solver.cpp - Subtree \& Feature Parallelism}
 
-\begin{frame}[fragile]{General Solver: The Core Algorithm}
+\begin{frame}[fragile]{General Solver: Feature Parallelization}
+The general solver explores all features as potential root splits:
+\begin{lstlisting}
+// Parallel feature exploration 
+for (int feature_nr = 0; feature_nr < dataview.get_feature_number(); feature_nr++) {
+    int feature_index = dataview.gini_values[feature_nr].second;
+    
+    #pragma omp task firstprivate(feature_index) \
+                     shared(current_optimal_decision_tree, dataview, ...)
+    {
+        int current_upper_bound;
+        #pragma omp atomic read
+        current_upper_bound = current_optimal_decision_tree->misclassification_score;
+        
+        if (current_upper_bound > 0 && solution_configuration.stopwatch.IsWithinTimeLimit()) {
+            create_optimal_decision_tree(dataview, ..., feature_index, ...);
+        }
+    }
+}
+#pragma omp taskwait
+\end{lstlisting}
+
+\textbf{Key insight:} Each feature can be explored \textbf{independently} as a task!
+\end{frame}
+
+\begin{frame}[fragile]{General Solver: Subtree Independence}
 For each candidate split point, we need to evaluate:
 \begin{itemize}
     \item \textbf{Left subtree}: Optimal tree for data points $\leq$ threshold
@@ -438,6 +463,31 @@ Initially, we added \texttt{\#pragma omp parallel} inside specialized\_solver:
 
 %===============================================================================
 \section{Performance Results}
+
+\begin{frame}[fragile]{Running the Solver: run\_smart.sh}
+We use a smart wrapper script to configure OpenMP settings:
+
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+# Automatically selects optimal OMP settings based on depth
+
+export OMP_DYNAMIC=false
+
+if [ "$DEPTH" -le 3 ]; then
+    export OMP_NUM_THREADS=60
+    export OMP_PLACES=cores
+    export OMP_PROC_BIND=spread
+    export OMP_WAIT_POLICY=active
+else
+    export OMP_NUM_THREADS=60  # or 30 for specific datasets, specifically raisin
+fi
+
+# Use NUMA interleaved memory allocation
+exec numactl --interleave=all "$@"
+\end{lstlisting}
+
+\textbf{Usage:} \texttt{./run\_smart.sh ./ConTree -file data.txt -max-depth 3}
+\end{frame}
 
 \begin{frame}{Benchmark Results}
 \textbf{Dataset:} avila.txt (20,867 instances, 10 features)\\

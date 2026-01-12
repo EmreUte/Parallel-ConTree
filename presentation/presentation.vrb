@@ -1,28 +1,23 @@
-\frametitle{Atomic Operations for Statistics}
-For simple counters, use \texttt{atomic} instead of \texttt{critical}:
+\frametitle{Running the Solver: run\_smart.sh}
+We use a smart wrapper script to configure OpenMP settings:
 
-\begin{lstlisting}
-#pragma omp atomic
-statistics::total_number_of_specialized_solver_calls += 1;
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+# Automatically selects optimal OMP settings based on depth
+
+export OMP_DYNAMIC=false
+
+if [ "$DEPTH" -le 3 ]; then
+    export OMP_NUM_THREADS=60
+    export OMP_PLACES=cores
+    export OMP_PROC_BIND=spread
+    export OMP_WAIT_POLICY=active
+else
+    export OMP_NUM_THREADS=60  # or 30 for specific datasets, specifically raisin
+fi
+
+# Use NUMA interleaved memory allocation
+exec numactl --interleave=all "$@"
 \end{lstlisting}
 
-\vspace{1em}
-\begin{columns}
-\column{0.5\textwidth}
-\textbf{atomic}
-\begin{itemize}
-    \item Single memory operation
-    \item Hardware-level guarantee
-    \item Very low overhead
-    \item Limited to simple operations
-\end{itemize}
-
-\column{0.5\textwidth}
-\textbf{critical}
-\begin{itemize}
-    \item Arbitrary code block
-    \item Software lock
-    \item Higher overhead
-    \item More flexible
-\end{itemize}
-\end{columns}
+\textbf{Usage:} \texttt{./run\_smart.sh ./ConTree -file data.txt -max-depth 3}
