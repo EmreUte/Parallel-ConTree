@@ -13,6 +13,7 @@
 #include "parameter_handler.h"
 #include "statistics.h"
 #include "tree.h"
+#include "gpu_solver.h"
 
 void create_optimal_decision_tree(std::string file_name, int run_number, Configuration& config, double runtime_limit) {
     long long total_time = 0;
@@ -95,12 +96,28 @@ int main(int argc, char *argv[]) {
     config.max_gap_decay = float(parameters.GetFloatParameter("max-gap-decay"));
     config.sort_gini = parameters.GetBooleanParameter("sort-features-gini-index");
     
-    
+    // Initialize GPU solver
+    if (gpu_solver::is_gpu_available()) {
+        int user_batch_size = (int)parameters.GetIntegerParameter("gpu-batch-size");
+        if (user_batch_size > 0) {
+            gpu_solver::set_min_batch_size(user_batch_size);
+            if (config.print_logs) std::cout << "GPU Batch Size set to: " << user_batch_size << std::endl;
+        }
+        
+        // Allocate GPU memory for typical dataset sizes
+        // Max values: 250K data points, 20 features, 15 classes
+        gpu_solver::initialize(250000, 20, 15);
+        if (config.print_logs) std::cout << "GPU Solver Initialized (Hybrid Mode)" << std::endl;
+    }
+
     if (config.print_logs) {
         parameters.PrintParameterValues();
     }
 
     create_optimal_decision_tree(file, NUM_RUNS, config, runtime_limit);
+    
+    // Cleanup
+    gpu_solver::cleanup();
 
     return 0;
 }

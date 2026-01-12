@@ -1,4 +1,5 @@
 #include "specialized_solver.h"
+#include "gpu_solver.h"
 #include <omp.h>
 
 class Depth1ScoreHelper {
@@ -247,10 +248,135 @@ void SpecializedSolver::create_optimal_decision_tree(const Dataview& dataview, c
     std::queue<IntervalsPruner::Bound> unsearched_intervals;
     unsearched_intervals.push({0, (int)possible_split_indices.size() - 1, -1, -1});
 
-    while(!unsearched_intervals.empty()) {
-        auto current_interval = unsearched_intervals.front(); unsearched_intervals.pop();
+    const int class_count = dataview.get_class_number();
 
+    while(!unsearched_intervals.empty()) {
         int current_misclassification;
+        #pragma omp critical(specialized_tree_access)
+        {
+            current_misclassification = current_optimal_decision_tree->misclassification_score;
+        }
+
+        // --- Hybrid GPU Integration Start ---
+    const bool gpu_available = gpu_solver::is_initialized();
+    
+    // Condition: Large enough queue to justify GPU overhead
+    if (gpu_available && unsearched_intervals.size() >= gpu_solver::GPU_MIN_BATCH_SIZE) {
+        
+        // 1. Collect Batch
+        std::vector<IntervalsPruner::Bound> batch_intervals;
+        std::vector<int> batch_split_points;
+        std::vector<int> batch_mids;
+        std::vector<float> batch_thresholds;
+        
+        while (!unsearched_intervals.empty() && 
+               batch_intervals.size() < (size_t)gpu_solver::GPU_MAX_BATCH_SIZE) {
+               
+            auto current_interval = unsearched_intervals.front();
+            unsearched_intervals.pop();
+            
+            // Standard Pruning Checks
+            if (interval_pruner.subinterval_pruning(current_interval, current_misclassification)) continue;
+            interval_pruner.interval_shrinking(current_interval, current_misclassification);
+            const auto& [left, right, l_bound, r_bound] = current_interval;
+            if (left > right) continue;
+            
+            // Compute Geometry
+            const int mid = (left + right) / 2;
+            const int split_point = possible_split_indices[mid];
+            const float threshold = mid > 0 
+                ? (current_feature[possible_split_indices[mid - 1]].value + current_feature[split_point].value) / 2.0f
+                : (current_feature[split_point].value + current_feature[0].value) / 2.0f;
+                
+            batch_intervals.push_back(current_interval);
+            batch_split_points.push_back(split_point);
+            batch_mids.push_back(mid);
+            batch_thresholds.push_back(threshold);
+        }
+        
+        if (!batch_split_points.empty()) {
+            // 2. GPU Score
+            std::vector<int> gpu_left, gpu_right;
+            bool success = false;
+            
+            #pragma omp critical(gpu_solver_access)
+            {
+                success = gpu_solver::batch_evaluate_split_points(
+                    current_feature, batch_split_points, class_count, gpu_left, gpu_right
+                );
+            }
+            
+            if (success) {
+                // 3. Sort by Score (Ascending = Best/Lowest Error First)
+                std::vector<std::pair<int, size_t>> scored_indices;
+                for(size_t i=0; i<batch_split_points.size(); ++i) {
+                    scored_indices.push_back({gpu_left[i] + gpu_right[i], i});
+                }
+                std::sort(scored_indices.begin(), scored_indices.end());
+                
+                // 4. Process in Sorted Order (CPU does the hard work)
+                for (const auto& pair : scored_indices) {
+                    size_t idx = pair.second;
+                    // Re-construct context for CPU processing
+                    const auto& [left, right, current_left_bound, current_right_bound] = batch_intervals[idx];
+                    const int mid = batch_mids[idx];
+                    const int split_point = batch_split_points[idx];
+                    const float threshold = batch_thresholds[idx];
+                    
+                    // --- Original CPU Logic Block ---
+                    std::shared_ptr<Tree> left_optimal_dt = std::make_shared<Tree>();
+                    std::shared_ptr<Tree> right_optimal_dt = std::make_shared<Tree>();
+
+                    #pragma omp atomic
+                    statistics::total_number_of_specialized_solver_calls += 1;
+                    
+                    get_best_left_right_scores(dataview, feature_index, split_point, threshold, 
+                                               left_optimal_dt, right_optimal_dt, current_misclassification);
+                    
+                    // Safety assertions consistent with original code
+                    RUNTIME_ASSERT(left_optimal_dt->misclassification_score >= 0, "D2 - Left tree non-negative.");
+                    RUNTIME_ASSERT(right_optimal_dt->misclassification_score >= 0, "D2 - Right tree non-negative.");
+
+                    const int current_best_score = left_optimal_dt->misclassification_score + 
+                                                   right_optimal_dt->misclassification_score;
+
+                    #pragma omp critical(specialized_tree_access)
+                    {
+                        if (current_best_score < current_optimal_decision_tree->misclassification_score) {
+                            current_optimal_decision_tree->misclassification_score = current_best_score;
+                            current_optimal_decision_tree->update_split(feature_index, threshold, 
+                                                                        left_optimal_dt, right_optimal_dt);
+                            upper_bound = std::min(upper_bound, current_best_score);
+                        }
+                        current_misclassification = current_optimal_decision_tree->misclassification_score;
+                    }
+
+                    if (current_best_score == 0) return; // Early exit on perfect split
+
+                    interval_pruner.add_result(mid, left_optimal_dt->misclassification_score, 
+                                               right_optimal_dt->misclassification_score);
+
+                    if (left != right) {
+                        const int score_diff = current_best_score - current_misclassification;
+                        const auto [new_l, new_r] = interval_pruner.neighbourhood_pruning(score_diff, left, right, mid);
+
+                        if (new_l <= right) unsearched_intervals.push({new_l, right, mid, current_right_bound});
+                        if (left <= new_r) unsearched_intervals.push({left, new_r, current_left_bound, mid});
+                    }
+                }
+                
+                // Batch processed, loop back to check queue again
+                continue; 
+            } else {
+                // GPU failed? Fallback: push back to queue in original order
+                for(const auto& intr : batch_intervals) unsearched_intervals.push(intr);
+            }
+        }
+    }
+    // --- Hybrid GPU Integration End ---
+
+    auto current_interval = unsearched_intervals.front(); unsearched_intervals.pop();
+
         #pragma omp critical(specialized_tree_access)
         {
             current_misclassification = current_optimal_decision_tree->misclassification_score;

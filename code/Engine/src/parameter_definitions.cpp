@@ -93,5 +93,15 @@ ParameterHandler ParameterHandler::DefineParameters() {
 		"Algorithmic Parameters"
 	);
 
+    parameters.DefineIntegerParameter
+    (
+        "gpu-batch-size",
+        "Minimum batch size to trigger GPU execution.",
+        200, // default
+        "Algorithmic Parameters",
+        0, // min
+        10000 // max
+    );
+
 	return parameters;
 }

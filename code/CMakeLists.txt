@@ -42,25 +42,46 @@ file(GLOB SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-# Define include directories
-set(INCLUDE_DIRS
-    ${CMAKE_SOURCE_DIR}/Utilities/include
-    ${CMAKE_SOURCE_DIR}/DataStructures/include
-    ${CMAKE_SOURCE_DIR}/Engine/include
-)
+# Initialize SOURCES with C++ files
+set(SOURCES ${SRC_FILES})
 
-# Specify include directories
-include_directories(${INCLUDE_DIRS})
+# Check for CUDA availability
+include(CheckLanguage)
+check_language(CUDA)
+
+if(CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+    find_package(CUDAToolkit REQUIRED)
+    
+    # Add GPU source files
+    list(APPEND SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/Engine/src/gpu_solver.cu)
+    
+    message(STATUS "CUDA definitions found. Compiling with GPU support.")
+else()
+    message(WARNING "CUDA NOT found. Compiling without GPU support.")
+endif()
 
 # Find OpenMP
 find_package(OpenMP REQUIRED)
 
 # Create the executable
-add_executable(ConTree ${SRC_FILES})
+add_executable(ConTree ${SOURCES})
+
+target_include_directories(ConTree PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/Engine/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/DataStructures/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/include
+)
 
 # Link OpenMP
 if(OpenMP_CXX_FOUND)
     target_link_libraries(ConTree PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
+if(CMAKE_CUDA_COMPILER)
+    target_link_libraries(ConTree PUBLIC CUDA::cudart)
+    set_target_properties(ConTree PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+    set_target_properties(ConTree PROPERTIES CUDA_ARCHITECTURES "89")
 endif()
 
 # Set target properties based on build type
