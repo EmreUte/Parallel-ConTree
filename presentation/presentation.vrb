@@ -1,0 +1,23 @@
+\frametitle{Running the Solver: run\_smart.sh}
+We use a smart wrapper script to configure OpenMP settings:
+
+\begin{lstlisting}[language=bash]
+#!/bin/bash
+# Automatically selects optimal OMP settings based on depth
+
+export OMP_DYNAMIC=false
+
+if [ "$DEPTH" -le 3 ]; then
+    export OMP_NUM_THREADS=60
+    export OMP_PLACES=cores
+    export OMP_PROC_BIND=spread
+    export OMP_WAIT_POLICY=active
+else
+    export OMP_NUM_THREADS=60  # or 30 for specific datasets, specifically raisin
+fi
+
+# Use NUMA interleaved memory allocation
+exec numactl --interleave=all "$@"
+\end{lstlisting}
+
+\textbf{Usage:} \texttt{./run\_smart.sh ./ConTree -file data.txt -max-depth 3}
